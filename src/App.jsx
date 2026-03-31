@@ -6,6 +6,8 @@ import L from 'leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
 import { CONSTANTS, calculatePSH, calculateSubsidy, formatINR } from './constants';
+import { Capacitor } from '@capacitor/core';
+import { Printer } from '@capgo/capacitor-printer';
 
 // ── Fix Leaflet default icon paths ────────────────────────────────
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -549,7 +551,13 @@ function App() {
             </div>
             <button
               className="btn-primary"
-              onClick={() => window.print()}
+              onClick={async () => {
+                if (Capacitor.isNativePlatform()) {
+                  await Printer.printWebView();
+                } else {
+                  window.print();
+                }
+              }}
               id="btn-print"
             >
               <span>🖨️</span> Print / Save PDF
